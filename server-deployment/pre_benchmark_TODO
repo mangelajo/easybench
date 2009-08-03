@@ -1,0 +1,4 @@
+crear %%PREFIX%%/www
+crear %%PREFIX%%/lighttpd/var
+crear %%PREFIX%%/lighttpd/log
+

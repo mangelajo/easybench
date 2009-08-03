@@ -1,0 +1,19 @@
+<%inherit file="base.html"/>
+
+
+<%def name="headextra()"></%def>
+<%def name="title()">Easybench basic benchmark template</%def>
+
+<h1>REQ/s / Clients</h1>
+    <div id="placeholder" style="width:600px;height:300px"></div>
+    
+
+
+% for server in servers:
+    ${server}
+% endfor
+
+    
+
+
+

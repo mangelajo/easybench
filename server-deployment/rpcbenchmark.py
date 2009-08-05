@@ -63,16 +63,12 @@ def server_exec(to_exec, server_name,config=""):
 
 class RPCBenchmarkServer:
     
-    
-    
     def start(self, server_name, config):
         running_server = self.running_server()
         
         if running_server!="NONE":
             self.stop(running_server)
-            
-            
-        
+                    
         return server_exec("start",server_name,config)
        
     
@@ -80,7 +76,7 @@ class RPCBenchmarkServer:
     def stop(self,server_name):
         res= server_exec("stop",server_name)
         if res:
-            time.sleep(4)
+            time.sleep(6) # some processes have problem with port reusing
         return res
         
     def stop_all(self):
@@ -116,6 +112,17 @@ class RPCBenchmarkServer:
             s_list.append(server["name"])
         
         return s_list
+    
+    def get_cpuinfo(self):
+        lines = ["no cpuinfo available"]
+        try:
+            f = open("/proc/cpuinfo","r")
+            lines = f.readlines()
+            f.close()
+        except:
+            pass
+        
+        return lines
         
     
     

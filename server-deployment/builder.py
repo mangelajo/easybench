@@ -186,7 +186,18 @@ def build_sources(server_s,reconfigure_forced=False):
         if result!=0:
             print "error doing a", make_params
             return False
-        
+        #
+        # do postbuild steps needed for some servers 
+        #
+            
+	if server_s.has_key("postinstall"):
+		for post in server_s["postinstall"]:
+			post = do_replacements(post,server_s)	
+			result = call (post,shell=True)
+			if result!=0:
+				print "error postinstall => ",post
+				return False
+    
         #
         # mark build directory as "all done"
         #
@@ -194,7 +205,7 @@ def build_sources(server_s,reconfigure_forced=False):
         f = open("all_done","w")
         f.write("1\n")
         f.close();
-            
+        
         os.chdir(SAVED_CWD)
         
     return True

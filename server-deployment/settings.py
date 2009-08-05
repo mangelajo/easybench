@@ -34,7 +34,7 @@ CHEROKEE={	"name"		:"cherokee",
                 "copy_sources":False,
                 "makeopts":DEFAULT_MAKE_OPTS,
                 "getmem": (DEFAULT_GETMEM % "cherokee"),
-                "start":  "/opt/benchmark/cherokee_0_99_20/sbin/cherokee -C conf_templates/cherokee-0.99.20/cherokee.%(config)s.conf -d",
+                "start":  "/opt/benchmark/cherokee/sbin/cherokee -C conf_templates/cherokee-0.99.20/cherokee.%(config)s.conf -d",
                 "stop":   "killall cherokee"}
 
 

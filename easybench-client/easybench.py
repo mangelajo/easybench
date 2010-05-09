@@ -30,27 +30,11 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 import settings
-import ab_perf
+import cb_perf as ab_perf
 import sys
 import os.path
+import time
 from xmlrpclib import ServerProxy
-from mako.template import Template
-from mako.lookup import TemplateLookup
-import simplejson as json
-
-# mylookup = TemplateLookup(directories=[''])
-# mytemplate = Template(filename='templates/basic.html',lookup=mylookup)
-# print mytemplate.render(servers=["apache","nginx"])
-
-
-
-#>>> import simplejson as json
-#>>> json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}])
-#'["foo", {"bar": ["baz", null, 1.0, 2]}]'
-#>>> str = json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}])
-#>>> json.loads(str)
-#[u'foo', {u'bar': [u'baz', None, 1.0, 2]}]
-
     
 
 def print_banner(server,conf):
@@ -71,6 +55,10 @@ def main():
     
     ip = sys.argv[1]
     
+    f_out = open("out.py","w")
+    
+    f_out.write("server={}\n");
+    
     server_c = ServerProxy(settings.RPC_SERVER % {"ip":ip})
     server_c.stop_all()
     
@@ -89,35 +77,28 @@ def main():
         for server in settings.SERVERS:
             print_banner(server,conf)
         
+            print "sleeping 10 seconds to let the server settle down"
+            time.sleep(10);
+            print "sleep done"
+            print ""
             
             s_stats = ab_perf.ab_benchmark(urls,server_c,server,{},conf)
             
+            server_c.stop(server)
+            
             print s_stats
             
+            f_out.write("server['"+server+"_"+conf+"']="+str(s_stats)+"\n")
+            
             stats_c[server]=s_stats
+            
+            
     
-        stats[conf]=stats_c 
+        stats[conf]=stats_c
+        
+    f_out.close()
     
 
 
 if __name__ == "__main__":
     main()
-
-#
-# output:
-#   cherokee['static'][0]['type']="x/clients"
-#   cherokee['static'][0]['x_axis']="clients"
-#   cherokee['static'][0]['test_urls']=[......]
-#   cherokee['static'][0]['reqs_sec']=[.....]
-#   cherokee['static'][0]['reqs_ok']=[.....]
-#   cherokee['static'][0]['reqs_fail']=[.....]
-#   cherokee['static'][0]['memory_kb']=[.....]
-#   cherokee['static'][0]['transfer_rate']=[.....]
-#
-#      
-#
-#   benchresult[0]['servers']=['cherokee','nginx','lighttpd','apache']
-#   benchresult[0]['x_axis']="Concurrent Clients"
-#   benchresult[0]['x_values']=[1,51,101,151,201,...]
-#   benchresult[0]['servers']=[cherokee,nginx,lighttpd,apache]
-

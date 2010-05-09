@@ -18,7 +18,9 @@ URLS={ "php":[
 #              "http://%(ip)s/rand1024.bin"
               ]}
 
-SERVERS=["cherokee","apache","apache-worker","nginx","lighttpd"]
-CONFS=["static","php"]
+SERVERS = ["apache","cherokee","apache-worker","nginx","lighttpd"]
+#CONFS=["php"]
+#SERVERS=["cherokee","apache","apache-worker","nginx","lighttpd"]
+CONFS=["static"]
 
 OUTPUT_DIRECTORY = "output"
